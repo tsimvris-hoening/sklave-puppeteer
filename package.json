@@ -10,9 +10,6 @@
   "author": "Petros Tsimvris",
   "license": "MIT",
   "dependencies": {
-    "basic-ftp": "^5.0.4",
-    "execSync": "^1.0.2",
-    "npm": "^10.3.0",
     "puppeteer": "^21.7.0",
     "shelljs": "^0.8.5"
   }

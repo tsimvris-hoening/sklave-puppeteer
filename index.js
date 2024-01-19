@@ -3,6 +3,7 @@ const shell = require("shelljs");
 
 function runScripts(){
     let run = 0;
+    shell.exec("chmod -R 755 /opt/render/.cache/puppeteer/\n")
     setInterval(()=>{
         run +=1;
         console.log("Starting ",run," run!")
