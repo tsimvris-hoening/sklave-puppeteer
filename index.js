@@ -14,6 +14,8 @@ async function startScript(run){
     const browser = await puppeteer.launch({
         headless:"new",
         args: ['--no-sandbox', '--disable-setuid-sandbox'], // Add these if you're running on a Linux server
+        userDataDir: '/opt/render/.cache/puppeteer', // The path to your user data directory
+
     }).catch(e => console.error(e));
     const page = await browser.newPage();
     await page.setViewport({
