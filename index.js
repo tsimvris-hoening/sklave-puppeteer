@@ -13,7 +13,7 @@ function runScripts(){
 async function startScript(run){
     const browser = await puppeteer.launch({
         headless:"new",
-        executablePath:'.cache/puppeteer/chrome/linux-119.0.6045.105/chrome-linux64/chrome'
+        args: ['--no-sandbox', '--disable-setuid-sandbox'], // Add these if you're running on a Linux server
     });
     const page = await browser.newPage();
     await page.setViewport({
