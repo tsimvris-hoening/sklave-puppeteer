@@ -1,22 +1,19 @@
 const puppeteer = require('puppeteer');
 const shell = require("shelljs");
-const path = require('path');
 
 function runScripts(){
     let run = 0;
-    const chromeExecutablePath = path.join(process.cwd(), '/opt/render/.cache/puppeteer/chrome/linux-119.0.6045.105/chrome-linux64/chrome');
-    console.log(path.join(process.cwd()))
-    console.log(chromeExecutablePath)
+
     setInterval(()=>{
         run +=1;
         console.log("Starting ",run," run!")
-            startScript(run,chromeExecutablePath)
+            startScript(run)
     },30000)
 }
-async function startScript(run,chromeExecutablePath){
+async function startScript(run){
     const browser = await puppeteer.launch({
         headless:"new",
-        executablePath:chromeExecutablePath
+        executablePath:'.cache/puppeteer/chrome/linux-119.0.6045.105/chrome-linux64/chrome'
     });
     const page = await browser.newPage();
     await page.setViewport({
