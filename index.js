@@ -1,5 +1,4 @@
 const puppeteer = require('puppeteer');
-const ftp = require('basic-ftp');
 const shell = require("shelljs");
 
 function runScripts(){
@@ -12,7 +11,8 @@ function runScripts(){
 }
 async function startScript(run){
     const browser = await puppeteer.launch({
-        headless:"new"
+        headless:"new",
+        executablePath:"/opt/render/.cache/puppeteer/chrome/linux-119.0.6045.105/chrome-linux64/chrome"
     });
     const page = await browser.newPage();
     await page.setViewport({
