@@ -2,7 +2,6 @@ const express = require("express");
 const app = express();
 const puppeteer = require('puppeteer');
 const shell = require("shelljs");
-const {response} = require("express");
 const PORT = process.env.PORT || 4000;
 require("dotenv").config();
 
@@ -26,7 +25,6 @@ function runScripts(){
     },30000)
 }
 async function startScript(run){
-    try{
     const browser = await puppeteer.launch({
         headless:"new",
         executablePath: process.env.NODE_ENV === "production" ? process.env.PUPPETEER_EXECUTABLE.PATH : puppeteer.executablePath(),
@@ -46,18 +44,9 @@ async function startScript(run){
         await page.screenshot({path:`./shots/screenshot-${i+1}.png`})
         await page.click(".displayContainer")
     }
-
-    }
-    catch (e){
-                console.error(e)
-        response.send(`Something went wrong ${e}`)
-    }
-    finally {
-        await browser.close();
-        shell.exec("npm run deploy");
-        console.log("Run ",run," completed")
-    }
-
+    await browser.close();
+    shell.exec("npm run deploy");
+    console.log("Run ",run," completed")
 }
 
 runScripts()
