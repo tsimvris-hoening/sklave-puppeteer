@@ -28,7 +28,7 @@ async function startScript(run){
     const browser = await puppeteer.launch({
         headless:"new",
         executablePath: process.env.NODE_ENV === "production" ? process.env.PUPPETEER_EXECUTABLE_PATH : puppeteer.executablePath(),
-        args:["--disable-setuid-sandbox","--no-sandbox","--single-process","--no-zygote"]
+        args:["--disable-setuid-sandbox","--no-sandbox"]
 
     })
     const page = await browser.newPage();
