@@ -1,6 +1,20 @@
+const express = require("express");
+const app = express();
 const puppeteer = require('puppeteer');
 const shell = require("shelljs");
+const PORT = process.env.PORT || 4000;
+require("dotenv").config();
 
+
+
+app.get("/",(req,res)=>{
+    let body = `Puppeteer server running on ${PORT}`
+    res.status(200).send(body)
+})
+
+app.listen(PORT,()=>{
+    console.log("Listening on ",PORT)
+})
 function runScripts(){
     let run = 0;
 
@@ -13,6 +27,9 @@ function runScripts(){
 async function startScript(run){
     const browser = await puppeteer.launch({
         headless:"new",
+        executablePath: process.env.NODE_ENV === "production" ? process.env.PUPPETEER_EXECUTABLE.PATH : puppeteer.executablePath(),
+        args:["--disable-setuid-sandbox","--no-sandbox","--single-process","--no-zygote"]
+
     }).catch(e => console.error(e));
     const page = await browser.newPage();
     await page.setViewport({
