@@ -27,10 +27,10 @@ function runScripts(){
 async function startScript(run){
     const browser = await puppeteer.launch({
         headless:"new",
-        executablePath: process.env.NODE_ENV === "production" ? process.env.PUPPETEER_EXECUTABLE.PATH : puppeteer.executablePath(),
+        executablePath: process.env.NODE_ENV === "production" ? process.env.PUPPETEER_EXECUTABLE_PATH : puppeteer.executablePath(),
         args:["--disable-setuid-sandbox","--no-sandbox","--single-process","--no-zygote"]
 
-    }).catch(e => console.error(e));
+    })
     const page = await browser.newPage();
     await page.setViewport({
         width: 3840,
