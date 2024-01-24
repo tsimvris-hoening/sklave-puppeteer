@@ -1,5 +1,6 @@
 const {Builder, By, Key, until, Options} = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
+const fs = require('fs').promises; // File system module to save the screenshot
 let reps = 3;
 let chromeOptions = new chrome.Options();
 chromeOptions.addArguments("--headless"); // Run Chrome in headless mode.
@@ -31,7 +32,7 @@ async function runVertikal() {
         .build();
     await driver.manage().window().setRect({width: 1440, height: 2550});
     await driver.get(url);
-    await sleep(400);
+    await sleep(4000);
     for(let i = 0; i<reps;i++){
         await sleep(1500);
         let element = await driver.findElement(By.xpath('/html/body/app-root/div[3]/app-vertikale-display/div'));
@@ -41,7 +42,6 @@ async function runVertikal() {
         await sleep(5000);
         let screenshot = await driver.takeScreenshot();
         await fs.writeFile(`./shots/vertikal-screenshot-${i}.png`, screenshot, 'base64');
-
     }
     await driver.quit();
 }
@@ -77,7 +77,6 @@ async function loadFiles() {
             const remoteFilePath = remoteDir + file; // Direct concatenation
             try {
                 await sftp.put(localFilePath, remoteFilePath);
-                console.log(`File uploaded successfully - ${file}`);
             } catch (err) {
                 console.error(`Error uploading file - ${file}: ${err.message}`);
             }
@@ -91,18 +90,18 @@ async function loadFiles() {
 }
 let index = 1;
 (async function main() {
-    while (true) { // Infinite loop
-        console.log(`Current run: ${index}`);
-        index += 1; // Increment the index
+    while (true) {
+        let date = new Date();
+        console.log(`Current run: ${index} at ${date.getHours()}:${date.getMinutes()}`);
+        index += 1;
         try {
-            console.log("Running Horizontal Process...");
             await runHorizontal();
-            console.log("Running Vertical Process...");
             await runVertikal();
-            console.log("Loading Files to Server...");
             await loadFiles();
+            await sleep(10000);
         } catch (error) {
             console.error("An error occurred: ", error);
+
         }
     }
 })();
