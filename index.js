@@ -18,7 +18,6 @@ async function runHorizontal() {
     await driver.get(url);
     await sleep(4000);
     for(let i = 0; i<reps;i++){
-        await sleep(4000);
         let screenshot = await driver.takeScreenshot();
         await ensureDirExists('./shots');
         await fs.writeFile(`./shots/screenshot-${i}.png`, screenshot, 'base64');
