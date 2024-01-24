@@ -1,10 +1,13 @@
 const {Builder, By, Key, until, Options} = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
+const path = require("path");
 const fs = require('fs').promises; // File system module to save the screenshot
 let reps = 3;
 let chromeOptions = new chrome.Options();
 chromeOptions.addArguments("--headless"); // Run Chrome in headless mode.
-chromeOptions.addArguments("--disable-gpu"); // Applicable to Windows OS only
+chromeOptions.addArguments("--no-sandbox"); // Applicable to Windows OS only
+chromeOptions.addArguments("--disable-dev-shm-usage"); // Applicable to Windows OS only
+
 const url = 'http://dashboard.hoening.local/ProductionUnits/'
 async function runHorizontal() {
     let driver = await new Builder()
@@ -13,9 +16,11 @@ async function runHorizontal() {
         .build();
     await driver.manage().window().setRect({width: 3840, height: 2160});
     await driver.get(url);
+    await sleep(4000);
     for(let i = 0; i<reps;i++){
         await sleep(4000);
         let screenshot = await driver.takeScreenshot();
+        await ensureDirExists('./shots');
         await fs.writeFile(`./shots/screenshot-${i}.png`, screenshot, 'base64');
         if(i<2){
             let element = await driver.findElement(By.className('displayContainer'));
@@ -41,6 +46,7 @@ async function runVertikal() {
         await driver.executeScript("arguments[0].click();", element);
         await sleep(5000);
         let screenshot = await driver.takeScreenshot();
+        await ensureDirExists('./shots');
         await fs.writeFile(`./shots/vertikal-screenshot-${i}.png`, screenshot, 'base64');
     }
     await driver.quit();
@@ -48,6 +54,13 @@ async function runVertikal() {
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
+}
+async function ensureDirExists(path) {
+    try {
+        await fs.mkdir(path, { recursive: true });
+    } catch (error) {
+        if (error.code !== 'EEXIST') throw error; // Only ignore error if dir already exists
+    }
 }
 async function loadFiles() {
     const SftpClient = require('ssh2-sftp-client');
